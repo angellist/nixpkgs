@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 77657cb..04fb06b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -76,10 +76,12 @@ INSTALL(TARGETS mydumper myloader
+   RUNTIME DESTINATION bin
+ )
+ 
+-INSTALL(FILES mydumper.cnf
+-  DESTINATION /etc
+-  COMPONENT config
+-)
++if(!APPLE)
++  INSTALL(FILES mydumper.cnf
++    DESTINATION /etc
++    COMPONENT config
++  )
++endif()
+ 
+ add_custom_target(dist
+   COMMAND git archive --format=tar.gz --prefix=${ARCHIVE_NAME}/
+diff --git a/src/mydumper_common.c b/src/mydumper_common.c
+index a3ea3f6..51103ba 100644
+--- a/src/mydumper_common.c
++++ b/src/mydumper_common.c
+@@ -315,8 +315,8 @@ void set_transaction_isolation_level_repeatable_read(MYSQL *conn){
+ gchar * build_filename(char *database, char *table, guint64 part, guint sub_part, const gchar *extension, const gchar *second_extension){
+   GString *filename = g_string_sized_new(20);
+   sub_part == 0 ?
+-    g_string_append_printf(filename, "%s.%s.%05lu.%s%s%s", database, table, part, extension, second_extension!=NULL ?".":"",second_extension!=NULL ?second_extension:"" ):
+-    g_string_append_printf(filename, "%s.%s.%05lu.%05u.%s%s%s", database, table, part, sub_part, extension, second_extension!=NULL ?".":"",second_extension!=NULL ?second_extension:"");
++    g_string_append_printf(filename, "%s.%s.%05lu.%s%s%s", database, table, (long) part, extension, second_extension!=NULL ?".":"",second_extension!=NULL ?second_extension:"" ):
++    g_string_append_printf(filename, "%s.%s.%05lu.%05u.%s%s%s", database, table, (long) part, sub_part, extension, second_extension!=NULL ?".":"",second_extension!=NULL ?second_extension:"");
+   gchar *r = g_build_filename(dump_directory, filename->str, NULL);
+   g_string_free(filename,TRUE);
+   return r;

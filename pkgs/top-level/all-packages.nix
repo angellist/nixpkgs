@@ -3046,6 +3046,8 @@ with pkgs;
 
   natls = callPackage ../tools/misc/natls { };
 
+  notion-app = callPackage ../applications/office/notion-app { };
+
   notion-app-enhanced = callPackage ../applications/office/notion-app-enhanced { };
 
   pikchr = callPackage ../tools/graphics/pikchr { };

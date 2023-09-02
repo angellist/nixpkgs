@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
   buildInputs = [ glib pcre libmysqlclient libressl zlib zstd ];
 
   env.NIX_CFLAGS_COMPILE = toString
-    (lib.optionals stdenv.isLinux [ "-Wno-unused-value" ]
+    (lib.optionals stdenv.isLinux [ "-Wno-unused-result" ]
       ++ lib.optionals stdenv.isDarwin [ "-Wno-sometimes-uninitialized" ]);
 
   cmakeFlags = [

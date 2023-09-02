@@ -20,8 +20,9 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ glib pcre libmysqlclient libressl zlib zstd ];
 
-  env.NIX_CFLAGS_COMPILE =
-    toString (lib.optionals stdenv.isDarwin [ "-Wno-sometimes-uninitialized" ]);
+  env.NIX_CFLAGS_COMPILE = toString
+    (lib.optionals stdenv.isUnix [ "-Wno-unused-value" ]
+      ++ lib.optionals stdenv.isDarwin [ "-Wno-sometimes-uninitialized" ]);
 
   cmakeFlags = [
     "-DCMAKE_SKIP_BUILD_RPATH=ON"

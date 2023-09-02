@@ -14972,6 +14972,8 @@ with pkgs;
 
   yarn = callPackage ../development/tools/yarn  { };
 
+  pnpm = callPackage ../development/tools/pnpm { };
+
   yarn-berry = callPackage ../development/tools/yarn-berry { };
 
   yarn2nix-moretea = callPackage ../development/tools/yarn2nix-moretea/yarn2nix { pkgs = pkgs.__splicedPackages; };

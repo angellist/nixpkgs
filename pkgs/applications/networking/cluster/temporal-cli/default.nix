@@ -2,7 +2,8 @@
 
 let
   metaCommon = with lib; {
-    description = "Command-line interface for running Temporal Server and interacting with Workflows, Activities, Namespaces, and other parts of Temporal";
+    description =
+      "Command-line interface for running Temporal Server and interacting with Workflows, Activities, Namespaces, and other parts of Temporal";
     homepage = "https://docs.temporal.io/cli";
     license = licenses.mit;
     maintainers = with maintainers; [ aaronjheng ];
@@ -17,16 +18,16 @@ let
 
   tctl-next = buildGoModule rec {
     pname = "tctl-next";
-    version = "0.9.0";
+    version = "0.10.5";
 
     src = fetchFromGitHub {
       owner = "temporalio";
       repo = "cli";
       rev = "v${version}";
-      hash = "sha256-zgi1wNx7fWf/iFGKaVffcXnC90vUz+mBT6HhCGdXMa0=";
+      hash = "sha256-zHseIXK3REDy6xBGuSV3VoUq/LlktAyTw57GhnuKCIQ";
     };
 
-    vendorHash = "sha256-EX1T3AygarJn4Zae2I8CHQrZakmbNF1OwE4YZFF+nKc=";
+    vendorHash = "sha256-KeBFf6+G4iu/k9b+UAKzye7WUoE8GH6BCd2DW1OZ/Qo";
 
     inherit overrideModAttrs;
 
@@ -34,11 +35,8 @@ let
 
     excludedPackages = [ "./cmd/docgen" "./tests" ];
 
-    ldflags = [
-      "-s"
-      "-w"
-      "-X github.com/temporalio/cli/headers.Version=${version}"
-    ];
+    ldflags =
+      [ "-s" "-w" "-X github.com/temporalio/cli/headers.Version=${version}" ];
 
     preCheck = ''
       export HOME=$(mktemp -d)
@@ -52,9 +50,7 @@ let
 
     __darwinAllowLocalNetworking = true;
 
-    meta = metaCommon // {
-      mainProgram = "temporal";
-    };
+    meta = metaCommon // { mainProgram = "temporal"; };
   };
 
   tctl = buildGoModule rec {
@@ -90,20 +86,14 @@ let
 
     __darwinAllowLocalNetworking = true;
 
-    meta = metaCommon // {
-      mainProgram = "tctl";
-    };
+    meta = metaCommon // { mainProgram = "tctl"; };
   };
-in
-symlinkJoin rec {
+in symlinkJoin rec {
   pname = "temporal-cli";
   inherit (tctl) version;
   name = "${pname}-${version}";
 
-  paths = [
-    tctl-next
-    tctl
-  ];
+  paths = [ tctl-next tctl ];
 
   passthru = { inherit tctl tctl-next; };
 
